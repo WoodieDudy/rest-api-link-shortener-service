@@ -34,8 +34,8 @@ router.post('/shorten', async (req, res) => {
 })
 
 
-router.get(/views$/, async (req, res) => {
-    const originalShortUrl = req.originalUrl.substr(1, req.originalUrl.indexOf('/views') - 1)
+router.get('/:url/views', async (req, res) => {
+    const originalShortUrl = req.params.url
     const find = await linkModel.where({short_url: 'localhost:8000/' + originalShortUrl})
     if (find.length > 0){
         const response = {
@@ -49,13 +49,11 @@ router.get(/views$/, async (req, res) => {
 })
 
 
-router.get(/^((?!shorten).)*$/, async (req, res) => {
-    const originalShortUrl = req.originalUrl.substr(1, req.originalUrl.length)
+router.get('/:url', async (req, res) => {
+    const originalShortUrl = req.params.url
     const find = await linkModel.where({short_url: 'localhost:8000/' + originalShortUrl})
-    console.log(find)
-    console.log(originalShortUrl)
     if (find.length > 0){
-        await linkModel.updateOne({short_url: 'localhost:8000/' + originalShortUrl}, { clicks: find[0].clicks + 1});
+        await linkModel.updateOne({short_url: 'localhost:8000/' + originalShortUrl}, {clicks: find[0].clicks + 1});
 
         const response = {
             "redirectTo": find[0].url

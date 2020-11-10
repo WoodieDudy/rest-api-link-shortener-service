@@ -14,7 +14,7 @@ async function start() {
             useFindAndModify: false
         })
         app.listen(PORT, () => {
-            console.log('Server has been started')
+            console.log('Server has been started\n')
         })
     } catch (e) {
         console.log(e)
