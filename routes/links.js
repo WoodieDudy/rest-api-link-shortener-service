@@ -54,11 +54,7 @@ router.get('/:url', async (req, res) => {
     const find = await linkModel.where({short_url: 'localhost:8000/' + originalShortUrl})
     if (find.length > 0){
         await linkModel.updateOne({short_url: 'localhost:8000/' + originalShortUrl}, {clicks: find[0].clicks + 1});
-
-        const response = {
-            "redirectTo": find[0].url
-        }
-        res.send(response) 
+        res.redirect('https://' + find[0].url)
     }
     else{
         res.send('Error 404')
