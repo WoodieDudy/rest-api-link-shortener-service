@@ -7,11 +7,11 @@ const linkModel = require('./models/links_db')
 router.post('/shorten', async (req, res) => {
     const urlToShorten = req.body.urlToShorten
 
-    const find = await linkModel.where({url: urlToShorten})
-    if (find.length > 0){
+    const find = await linkModel.findOne({url: urlToShorten})
+    if (find != null){
         const response = {
             "status": 'Got',
-            "shortenedUrl": find[0].short_url
+            "shortenedUrl": find.short_url
         }
         res.send(response)
     }
@@ -36,10 +36,10 @@ router.post('/shorten', async (req, res) => {
 
 router.get('/:url/views', async (req, res) => {
     const originalShortUrl = req.params.url
-    const find = await linkModel.where({short_url: 'localhost:8000/' + originalShortUrl})
-    if (find.length > 0){
+    const find = await linkModel.findOne({short_url: 'localhost:8000/' + originalShortUrl})
+    if (find != null){
         const response = {
-            "viewCount": find[0].clicks
+            "viewCount": find.clicks
         }
         res.send(response)
     }
@@ -51,10 +51,15 @@ router.get('/:url/views', async (req, res) => {
 
 router.get('/:url', async (req, res) => {
     const originalShortUrl = req.params.url
-    const find = await linkModel.where({short_url: 'localhost:8000/' + originalShortUrl})
-    if (find.length > 0){
-        await linkModel.updateOne({short_url: 'localhost:8000/' + originalShortUrl}, {clicks: find[0].clicks + 1});
-        res.redirect('https://' + find[0].url)
+    const find = await linkModel.findOne({short_url: 'localhost:8000/' + originalShortUrl})
+    if (find != null){
+        await linkModel.updateOne({short_url: 'localhost:8000/' + originalShortUrl}, {clicks: find.clicks + 1});
+        if (find.url.startsWith('http')){
+            res.redirect(find.url)
+        }
+        else{
+            res.redirect('http://' + find.url)
+        }
     }
     else{
         res.send('Error 404')
