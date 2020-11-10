@@ -4,7 +4,7 @@
 ### Установить зависимости 
 
 ```
-npm install express nodemon nanoid mongoose
+npm i
 ```
 
 ### Запустить dev версию
@@ -13,4 +13,4 @@ npm install express nodemon nanoid mongoose
 npm run dev
 ```
 
-_Выпослнил Крамаренко Г. С._
+_Выполнил Крамаренко Г. С._
