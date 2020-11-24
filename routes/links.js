@@ -62,7 +62,7 @@ router.get('/:url', async (req, res) => {
         }
     }
     else{
-        res.send('Error 404')
+        res.status(404).send('Unknown short link') 
     }
 })
 
